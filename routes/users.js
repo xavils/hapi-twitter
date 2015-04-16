@@ -27,9 +27,9 @@ exports.register = function(server, options, next) {
 			config: {
 				handler: function(request, reply) {
 					var newuser = request.payload.users;
-	        var db = request.server.plugins['hapi-mongodb'].db;
+      		var db = request.server.plugins['hapi-mongodb'].db;
 
-	        Bcrypt.genSalt(10, function(err, salt){
+        	Bcrypt.genSalt(10, function(err, salt){
 	        	Bcrypt.hash(newuser.password, salt, function(err, hash){
 	        		newuser.password = hash;
 	        	
@@ -67,7 +67,7 @@ exports.register = function(server, options, next) {
 			}
 		},
 		{
-			//Create a user
+			//Get a user
 			method: 'GET',	
 			path: '/users/{userID}',
 			handler: function(request, reply) {

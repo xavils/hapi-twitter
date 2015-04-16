@@ -10,6 +10,7 @@ server.connection({
 
 var plugins = [
 	{ register: require('./routes/users.js')},
+  { register: require('./routes/sessions.js')},
   { 
     register: require('hapi-mongodb'),
     options: {
@@ -18,6 +19,15 @@ var plugins = [
         'db': {
           'native_parser': false
         }
+      }
+    }
+  },
+  {
+    register: require('yar'),
+    options: {
+      cookieOptions: {
+        password: 'password',
+        isSecure: false
       }
     }
   }
