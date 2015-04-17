@@ -5,19 +5,24 @@ var server = new Hapi.Server();
 server.connection({ 
   host: '0.0.0.0', 
   port: process.env.PORT || 3000,
-  routes: {cors: true}
+  routes: {cors: {
+      headers: ['Access-Control-Allow-Credentials'],
+      credentials: true
+    }
+  }
 });
 
 var plugins = [
 	{ register: require('./routes/users.js')},
   { register: require('./routes/sessions.js')},
+  { register: require('./routes/tweets.js ')}
   { 
     register: require('hapi-mongodb'),
     options: {
       'url' : 'mongodb://127.0.0.1:27017/hapi-twitter',
       'settings' : {
         'db': {
-          'native_parser': false
+          'native_parser': true
         }
       }
     }

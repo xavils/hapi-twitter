@@ -1,4 +1,5 @@
 var Bcrypt = require('bcrypt');
+var Auth = require('./auth');
 //var Joi = require('joi');
 
 exports.register = function(server, options, next) {
@@ -47,9 +48,9 @@ exports.register = function(server, options, next) {
 
 			        			db.collection('sessions').insert(newSession, function(err, writeResult){
 			        				if (err) { return reply('Internal MongoDB error', err)}
-
+			        					console.log("Session inserted in the db");
 			        				request.session.set('hapi_twitter_session', {
-			        					'session_key': randomKey,
+			        					'session_id': randomKey,
 			        					'user_id': userMongo._id
 			        				})
 
@@ -84,6 +85,33 @@ exports.register = function(server, options, next) {
 			//	}
 		  }  
 		},
+		{
+			method: 'GET',
+			path: '/authenticated',
+			handler: function(request, reply) {
+				Auth.authenticated(request, function(result)
+					{
+					reply(result);
+				})
+			}
+		},
+		{
+			method: 'DELETE',
+			path: '/authenticated',
+			handler: function(request, reply) {
+				var session = request.session.get('hapi_twitter_session');
+				var db = request.server.plugins['hapi-mongodb'].db;
+
+				if (!session) {
+					return reply({ "message": "Already logged out" });
+				}
+
+				db.collection('sessions').remove({ "session_id": session.session_id },
+					function(err, writeResult){
+						if (err) { return reply('Internal MongoDB error', err); }
+				});
+			}
+		}
 	]);
 
 	next();
