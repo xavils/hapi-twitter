@@ -21,7 +21,7 @@ module.exports.authenticated = function(request, callback) {
 		} else {
 			return callback({
 				'message': 'Logged in',
-				'authenticated': true
+				'authenticated': true	
 			});
 		}
 	});

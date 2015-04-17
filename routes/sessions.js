@@ -97,7 +97,7 @@ exports.register = function(server, options, next) {
 		},
 		{
 			method: 'DELETE',
-			path: '/authenticated',
+			path: '/sessions',
 			handler: function(request, reply) {
 				var session = request.session.get('hapi_twitter_session');
 				var db = request.server.plugins['hapi-mongodb'].db;

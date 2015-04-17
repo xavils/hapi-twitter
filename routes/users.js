@@ -66,21 +66,21 @@ exports.register = function(server, options, next) {
 				}
 			}
 		},
-		{
-			//Get a user
-			method: 'GET',	
-			path: '/users/{userID}',
-			handler: function(request, reply) {
-        var id = encodeURIComponent(request.params.userID);
-        var db = request.server.plugins['hapi-mongodb'].db;
-        var ObjectID = request.server.plugins['hapi-mongodb'].ObjectID;
+			{
+				//Get a user
+				method: 'GET',	
+				path: '/users/{userID}',
+				handler: function(request, reply) {
+	        var id = encodeURIComponent(request.params.userID);
+	        var db = request.server.plugins['hapi-mongodb'].db;
+	        var ObjectID = request.server.plugins['hapi-mongodb'].ObjectID;
 
-        db.collection('users').findOne({ "_id" : ObjectID(id) }, function(err, writeResult) {
-          if (err) throw err;
-          reply(writeResult);
-        })
-      }
-		}
+	        db.collection('users').findOne({ "_id" : ObjectID(id) }, function(err, writeResult) {
+	          if (err) throw err;
+	          reply(writeResult);
+	        })
+	      }
+			}
 	]);
 
 	next();
