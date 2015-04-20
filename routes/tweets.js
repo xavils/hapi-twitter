@@ -44,15 +44,15 @@ exports.register = function(server, options, next) {
 			}
 		},
 		{
-			//Get a user
+			//Get a user? or a tweet?
 			method: 'GET',	
 			path: '/tweets/{id}',
 			handler: function(request, reply) {
-        var id = encodeURIComponent(request.params.user_id;
+        var id = encodeURIComponent(request.params.id);
         var db = request.server.plugins['hapi-mongodb'].db;
         var ObjectID = request.server.plugins['hapi-mongodb'].ObjectID;
 
-        db.collection('users').findOne({ "_id" : ObjectID(id) }, function(err, writeResult) {
+        db.collection('tweets').findOne({ "_id" : ObjectID(id) }, function(err, writeResult) {
           if (err) throw err;
           reply(writeResult);
         })
@@ -92,6 +92,29 @@ exports.register = function(server, options, next) {
 				}
 				
 			}
+		},
+		{
+		  // Delete one tweet
+		  method: 'DELETE',
+		  path: '/tweets/{id}',
+		  handler: function(request, reply) {
+		    Auth.authenticated(request, function(result) {
+		      if (result.authenticated) {
+		        var tweet = encodeURIComponent(request.params.id);
+
+		        var db = request.server.plugins['hapi-mongodb'].db;
+		        var ObjectID = request.server.plugins['hapi-mongodb'].ObjectID;
+
+		        db.collection('tweets').remove({ "_id": ObjectID(tweet) }, function(err, writeResult) {
+		          if (err) { return reply('Internal MongoDB error', err); }
+
+		          reply(writeResult);
+		        });
+		      } else {
+		        reply(result.message);
+		      }
+		    });
+		  }
 		}
 	]);
 
